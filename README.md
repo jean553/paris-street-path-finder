@@ -20,10 +20,10 @@ vagrant ssh
 
 Download streets polygons full CSV file from [here](https://opendata.paris.fr/explore/dataset/plan-de-voirie-chaussees/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B).
 
-Extract polygons of every streets as JSON arrays:
+Extract simple polygons of every streets as JSON arrays:
 
 ```sh
-cat plan-de-voirie-chaussees.csv | cut -d';' -f7 | sed 's/.*\[\[\[/\[/' | sed 's/\]\]//' | sed 's/}"//g' | sed 's/^/\[/g' | sed 's/$/\]/g'
+cat plan-de-voirie-chaussees.csv | grep -v 'MultiPolygon' | grep -v 'geo_shape' | cut -d';' -f7 | sed 's/.*\[\[\[/\[/' | sed 's/\]\]//' | sed 's/}"//g' | sed 's/^/\[/g' | sed 's/$/\]/g' > data/streets_polygons
 ```
 
 ## Credits
