@@ -13,3 +13,23 @@ vagrant up
 ```sh
 vagrant ssh
 ```
+
+## Extract data from Paris Open Data files
+
+### Streets polygons
+
+Download streets polygons full CSV file from [here](https://opendata.paris.fr/explore/dataset/plan-de-voirie-chaussees/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B).
+
+Extract polygons of every streets as JSON arrays:
+
+```sh
+cat plan-de-voirie-chaussees.csv | cut -d';' -f7 | sed 's/.*\[\[\[/\[/' | sed 's/\]\]//' | sed 's/}"//g' | sed 's/^/\[/g' | sed 's/$/\]/g'
+```
+
+## Credits
+
+Use the following open data from Paris Open data, distributed under [ODbL licence](https://opendatacommons.org/licenses/odbl/summary/).
+
+ * [streets](https://opendata.paris.fr/explore/dataset/plan-de-voirie-chaussees)
+ * [walking areas](https://opendata.paris.fr/explore/dataset/aires-pietonnes)
+ * [addresses](https://opendata.paris.fr/explore/dataset/adresse_paris)
