@@ -50,10 +50,4 @@ fn main() {
     }
 
     println!("Streets points list created.");
-
-    for point in points {
-        println!("{:?}", point.polygon_index);
-        println!("{:?}", point.coordinates.0);
-        println!("{:?}", point.coordinates.1);
-    }
 }
