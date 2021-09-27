@@ -1,19 +1,23 @@
 extern crate serde_json;
+extern crate geo;
+
+use geo::Point;
 
 use std::fs::File;
 use std::io::{
     BufReader,
     BufRead,
 };
+use std::env;
 
-struct Point {
+struct PolygonPoint {
     polygon_index: usize,
-    coordinates: (f64, f64)
+    coordinates: Point<f64>
 }
 
 fn main() {
 
-    type Polygon = Vec<(f64, f64)>;
+    type Polygon = Vec<Point<f64>>;
     let mut polygons: Vec<Polygon> = Vec::new();
 
     println!("Building streets polygons list...");
@@ -26,7 +30,13 @@ fn main() {
     for line in reader.lines() {
 
         let json = line.unwrap();
-        let polygon: Vec<(f64, f64)> = serde_json::from_str(&json).unwrap();
+        let points: Vec<(f64, f64)> = serde_json::from_str(&json).unwrap();
+
+        let mut polygon: Vec<Point<f64>> = Vec::new();
+        for point in points {
+            polygon.push(point.into());
+        }
+
         polygons.push(polygon);
     }
 
@@ -34,20 +44,27 @@ fn main() {
 
     println!("Building streets points list...");
 
-    let mut points: Vec<Point> = Vec::new();
+    let mut points: Vec<PolygonPoint> = Vec::new();
 
     for (index, polygon) in polygons.iter().enumerate() {
 
         for point in polygon {
 
             points.push(
-                Point {
+                PolygonPoint {
                     polygon_index: index,
-                    coordinates: (point.0, point.1)
+                    coordinates: point.clone(),
                 }
             );
         }
     }
 
     println!("Streets points list created.");
+
+    let args: Vec<String> = env::args().collect();
+
+    let latitude = &args[1].parse::<f32>().unwrap();
+    let longitude = &args[2].parse::<f32>().unwrap();
+
+    println!("Searching for [{}, {}] coordinates closest polygon point...", latitude, longitude);
 }
