@@ -6,10 +6,15 @@ use std::io::{
     BufRead,
 };
 
+struct Point {
+    polygon_index: usize,
+    coordinates: (f64, f64)
+}
+
 fn main() {
 
     type Polygon = Vec<(f64, f64)>;
-    let mut street_polygons: Vec<Polygon> = Vec::new();
+    let mut polygons: Vec<Polygon> = Vec::new();
 
     println!("Building streets polygons list...");
 
@@ -22,8 +27,27 @@ fn main() {
 
         let json = line.unwrap();
         let polygon: Vec<(f64, f64)> = serde_json::from_str(&json).unwrap();
-        street_polygons.push(polygon);
+        polygons.push(polygon);
     }
 
     println!("Streets polygons list created.");
+
+    println!("Building streets points list...");
+
+    let mut points: Vec<Point> = Vec::new();
+
+    for (index, polygon) in polygons.iter().enumerate() {
+
+        for point in polygon {
+
+            points.push(
+                Point {
+                    polygon_index: index,
+                    coordinates: (point.0, point.1)
+                }
+            );
+        }
+    }
+
+    println!("Streets points list created.");
 }
