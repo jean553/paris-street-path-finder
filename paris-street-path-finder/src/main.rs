@@ -5,6 +5,7 @@ use std::io::{
     BufReader,
     BufRead,
 };
+use std::env;
 
 struct Point {
     polygon_index: usize,
@@ -50,4 +51,11 @@ fn main() {
     }
 
     println!("Streets points list created.");
+
+    let args: Vec<String> = env::args().collect();
+
+    let latitude = &args[1].parse::<f32>().unwrap();
+    let longitude = &args[2].parse::<f32>().unwrap();
+
+    println!("Searching for [{}, {}] coordinates closest polygon point...", latitude, longitude);
 }
