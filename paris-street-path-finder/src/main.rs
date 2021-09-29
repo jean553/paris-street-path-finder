@@ -63,8 +63,10 @@ fn main() {
 
     let args: Vec<String> = env::args().collect();
 
-    let latitude = &args[1].parse::<f32>().unwrap();
-    let longitude = &args[2].parse::<f32>().unwrap();
+    let latitude = args[1].parse::<f64>().unwrap();
+    let longitude = args[2].parse::<f64>().unwrap();
+
+    let origin_coordinates: Point<f64> = (latitude, longitude).into();
 
     println!("Searching for [{}, {}] coordinates closest polygon point...", latitude, longitude);
 }
