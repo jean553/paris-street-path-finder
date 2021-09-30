@@ -2,6 +2,8 @@ extern crate serde_json;
 extern crate geo;
 
 use geo::Point;
+use geo::point;
+use geo::algorithm::euclidean_distance::EuclideanDistance;
 
 use std::fs::File;
 use std::io::{
@@ -66,7 +68,20 @@ fn main() {
     let latitude = args[1].parse::<f64>().unwrap();
     let longitude = args[2].parse::<f64>().unwrap();
 
-    let origin_coordinates: Point<f64> = (latitude, longitude).into();
+    let origin_coordinates: Point<f64> = (longitude, latitude).into();
 
     println!("Searching for [{}, {}] coordinates closest polygon point...", latitude, longitude);
+
+    // longest possible euclidean distance between two points in Paris
+    const PARIS_LONGEST_DISTANCE: f64 = 0.16;
+    let mut shortest_distance: f64 = PARIS_LONGEST_DISTANCE;
+
+    for point in points {
+
+        let distance = origin_coordinates.euclidean_distance(&point.coordinates);
+
+        if distance < shortest_distance {
+            shortest_distance = distance;
+        }
+    }
 }
