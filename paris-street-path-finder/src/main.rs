@@ -2,7 +2,6 @@ extern crate serde_json;
 extern crate geo;
 
 use geo::Point;
-use geo::point;
 use geo::algorithm::euclidean_distance::EuclideanDistance;
 
 use std::fs::File;
