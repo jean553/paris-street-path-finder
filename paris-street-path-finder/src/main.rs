@@ -75,13 +75,26 @@ fn main() {
     // longest possible euclidean distance between two points in Paris
     const PARIS_LONGEST_DISTANCE: f64 = 0.16;
     let mut shortest_distance: f64 = PARIS_LONGEST_DISTANCE;
+    let mut polygon_index: usize = 0;
 
-    for point in points {
+    for (index, point) in points.iter().enumerate() {
 
         let distance = origin_coordinates.euclidean_distance(&point.coordinates);
 
         if distance < shortest_distance {
             shortest_distance = distance;
+            polygon_index = index;
         }
     }
+
+    let departure_point = points.get(polygon_index).unwrap();
+    let departure_latitude = departure_point.coordinates.x();
+    let departure_longitude = departure_point.coordinates.y();
+    println!(
+        "Closest polygon point [{}, {}] at index {} (distance = {})",
+        departure_longitude,
+        departure_latitude,
+        polygon_index,
+        shortest_distance,
+    );
 }
