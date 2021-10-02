@@ -95,6 +95,7 @@ fn main() {
     }
 
     let departure_point = points.get(departure_polygon_index).unwrap();
+    let departure_coordinates = departure_point.coordinates;
     let departure_latitude = departure_point.coordinates.x();
     let departure_longitude = departure_point.coordinates.y();
     println!(
@@ -143,4 +144,23 @@ fn main() {
         arrival_polygon_index,
         shortest_distance,
     );
+
+    println!("Searching for departure in-polygin index...");
+
+    let mut shortest_distance: f64 = PARIS_LONGEST_DISTANCE;
+
+    let polygon = polygons.get(departure_polygon_index).unwrap();
+    println!("{:?}", polygon);
+
+    for (index, point) in polygon.iter().enumerate() {
+
+        println!("{:?}", point);
+
+        //let distance = departure_coordinates.euclidean_distance(&point);
+
+        //if distance < shortest_distance {
+        //    shortest_distance = distance;
+        //    arrival_polygon_index = index;
+        //}
+    }
 }
