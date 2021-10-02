@@ -64,17 +64,25 @@ fn main() {
 
     let args: Vec<String> = env::args().collect();
 
-    let latitude = args[1].parse::<f64>().unwrap();
-    let longitude = args[2].parse::<f64>().unwrap();
+    let departure_input_latitude = args[1].parse::<f64>().unwrap();
+    let departure_input_longitude = args[2].parse::<f64>().unwrap();
 
-    let origin_coordinates: Point<f64> = (longitude, latitude).into();
+    let origin_coordinates: Point<f64> = (
+        departure_input_longitude,
+        departure_input_latitude
+    ).into();
 
-    println!("Searching for [{}, {}] coordinates closest polygon point...", latitude, longitude);
+    println!(
+        "Searching for departure coordinates [{}, {}] closest polygon point...",
+        departure_input_latitude,
+        departure_input_longitude,
+    );
 
     // longest possible euclidean distance between two points in Paris
     const PARIS_LONGEST_DISTANCE: f64 = 0.16;
     let mut shortest_distance: f64 = PARIS_LONGEST_DISTANCE;
-    let mut polygon_index: usize = 0;
+
+    let mut departure_polygon_index: usize = 0;
 
     for (index, point) in points.iter().enumerate() {
 
@@ -82,18 +90,18 @@ fn main() {
 
         if distance < shortest_distance {
             shortest_distance = distance;
-            polygon_index = index;
+            departure_polygon_index = index;
         }
     }
 
-    let departure_point = points.get(polygon_index).unwrap();
+    let departure_point = points.get(departure_polygon_index).unwrap();
     let departure_latitude = departure_point.coordinates.x();
     let departure_longitude = departure_point.coordinates.y();
     println!(
-        "Closest polygon point [{}, {}] at index {} (distance = {})",
+        "Departure closest polygon point [{}, {}] at index {} (distance = {})",
         departure_longitude,
         departure_latitude,
-        polygon_index,
+        departure_polygon_index,
         shortest_distance,
     );
 }
