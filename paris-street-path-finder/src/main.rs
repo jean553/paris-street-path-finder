@@ -138,6 +138,7 @@ fn main() {
     }
 
     let arrival_point = points.get(point_index).unwrap();
+    let arrival_coordinates = arrival_point.coordinates;
     let arrival_latitude = arrival_point.coordinates.x();
     let arrival_longitude = arrival_point.coordinates.y();
     println!(
@@ -166,4 +167,41 @@ fn main() {
     }
 
     println!("Departure in-polygon index is {}", departure_in_polygon_index);
+
+    println!("Searching for in-polygon adjacent point closest to the arrival...");
+
+    let in_polygon_last_index = polygon.len() - 1;
+
+    let first_point_index = if departure_in_polygon_index == 0 {
+        in_polygon_last_index
+    } else {
+        departure_in_polygon_index - 1
+    };
+
+    let second_point_index = if departure_in_polygon_index == in_polygon_last_index {
+        0
+    } else {
+        departure_in_polygon_index + 1
+    };
+
+    let first_point = polygon.get(first_point_index).unwrap();
+    let second_point = polygon.get(second_point_index).unwrap();
+
+    let first_point_distance = first_point.euclidean_distance(&arrival_coordinates);
+    let second_point_distance = second_point.euclidean_distance(&arrival_coordinates);
+
+    let mut next_in_polygon_point = first_point;
+    let mut distance = first_point_distance;
+
+    if first_point_distance > second_point_distance {
+        next_in_polygon_point = second_point;
+        distance = second_point_distance;
+    }
+
+    println!(
+        "In-polygon adjacent point closest to arrival is [{}, {}] (distance = {})",
+        next_in_polygon_point.y(),
+        next_in_polygon_point.x(),
+        distance,
+    );
 }
