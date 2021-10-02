@@ -104,4 +104,43 @@ fn main() {
         departure_polygon_index,
         shortest_distance,
     );
+
+    let arrival_input_latitude = args[3].parse::<f64>().unwrap();
+    let arrival_input_longitude = args[4].parse::<f64>().unwrap();
+
+    let origin_coordinates: Point<f64> = (
+        arrival_input_longitude,
+        arrival_input_latitude
+    ).into();
+
+    println!(
+        "Searching for arrival coordinates [{}, {}] closest polygon point...",
+        arrival_input_latitude,
+        arrival_input_longitude,
+    );
+
+    let mut shortest_distance: f64 = PARIS_LONGEST_DISTANCE;
+
+    let mut arrival_polygon_index: usize = 0;
+
+    for (index, point) in points.iter().enumerate() {
+
+        let distance = origin_coordinates.euclidean_distance(&point.coordinates);
+
+        if distance < shortest_distance {
+            shortest_distance = distance;
+            arrival_polygon_index = index;
+        }
+    }
+
+    let arrival_point = points.get(arrival_polygon_index).unwrap();
+    let arrival_latitude = arrival_point.coordinates.x();
+    let arrival_longitude = arrival_point.coordinates.y();
+    println!(
+        "Arrival closest polygon point [{}, {}] at index {} (distance = {})",
+        arrival_longitude,
+        arrival_latitude,
+        arrival_polygon_index,
+        shortest_distance,
+    );
 }
